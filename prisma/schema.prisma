@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+//hacer un reset pq ya cambie @unique en rooms 
+
+model Users {
+  user_id      Int     @id @default(autoincrement())
+  name         String
+  last_name    String
+  password     String
+  phone_number String?
+  curp         String  @unique
+  email        String?
+
+  Reservation Reservations[]
+}
+
+model Reservations {
+  reservation_id      Int       @id @default(autoincrement())
+  user                Users     @relation(fields: [user_id], references: [user_id])
+  user_id             Int
+  check_in             DateTime
+  check_out           DateTime
+  special_preferences String?
+  pay_method          String
+  Coupon              Coupons[]
+}
+
+model Coupons {
+  id_coupon        Int          @id @default(autoincrement())
+  code             String
+  discount_percent Int
+  start_promo      DateTime     @default(now())
+  end_promo        DateTime
+  reservations     Reservations @relation(fields: [reservations_id], references: [reservation_id])
+  reservations_id  Int
+}
+
+model States {
+  id_state   Int         @default(autoincrement()) @id
+  name       String
+  Municipios Municipios[]
+}
+
+model Municipios {
+  id_municipio Int      @id @default(autoincrement())
+  name         String
+  state        States   @relation(fields: [state_id], references: [id_state])
+  state_id     Int
+  Hotels       Hotels[]
+}
+
+model Hotels {
+  id_hotel     Int        @id @default(autoincrement())
+  name         String
+  description  String
+  municipio    Municipios @relation(fields: [id_municipio], references: [id_municipio])
+  id_municipio Int
+
+  Favoritos Favoritos[]
+  Rooms     Rooms[]
+}
+
+model Rooms {
+  id_room     Int         @id @default(autoincrement())
+  room_number Int 
+  type        String
+  description String?
+  hotel       Hotels      @relation(fields: [id_hotel], references: [id_hotel])
+  id_hotel    Int
+  @@unique([room_number,id_hotel])//combinacion unica
+  Favoritos   Favoritos[]
+}
+
+//tiene que aber un lugar en el front donde aga favorito el paquete del cliente que incluya estos campos
+model Favoritos {
+  id_fav   Int    @id
+  room     Rooms  @relation(fields: [room_id], references: [id_room])
+  hotel    Hotels @relation(fields: [id_hotel], references: [id_hotel])
+  id_hotel Int
+  room_id  Int
+}
