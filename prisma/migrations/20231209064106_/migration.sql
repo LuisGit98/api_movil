@@ -37,18 +37,9 @@ CREATE TABLE `Coupons` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `States` (
-    `id_state` INTEGER NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(191) NOT NULL,
-
-    PRIMARY KEY (`id_state`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `Municipios` (
     `id_municipio` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
-    `state_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`id_municipio`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -68,6 +59,7 @@ CREATE TABLE `Rooms` (
     `id_room` INTEGER NOT NULL AUTO_INCREMENT,
     `room_number` INTEGER NOT NULL,
     `type` VARCHAR(191) NOT NULL,
+    `precio` DOUBLE NOT NULL,
     `description` VARCHAR(191) NULL,
     `id_hotel` INTEGER NOT NULL,
 
@@ -89,9 +81,6 @@ ALTER TABLE `Reservations` ADD CONSTRAINT `Reservations_user_id_fkey` FOREIGN KE
 
 -- AddForeignKey
 ALTER TABLE `Coupons` ADD CONSTRAINT `Coupons_reservations_id_fkey` FOREIGN KEY (`reservations_id`) REFERENCES `Reservations`(`reservation_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Municipios` ADD CONSTRAINT `Municipios_state_id_fkey` FOREIGN KEY (`state_id`) REFERENCES `States`(`id_state`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Hotels` ADD CONSTRAINT `Hotels_id_municipio_fkey` FOREIGN KEY (`id_municipio`) REFERENCES `Municipios`(`id_municipio`) ON DELETE RESTRICT ON UPDATE CASCADE;

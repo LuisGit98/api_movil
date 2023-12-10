@@ -42,17 +42,9 @@ model Coupons {
   reservations_id  Int
 }
 
-model States {
-  id_state   Int         @default(autoincrement()) @id
-  name       String
-  Municipios Municipios[]
-}
-
 model Municipios {
   id_municipio Int      @id @default(autoincrement())
   name         String
-  state        States   @relation(fields: [state_id], references: [id_state])
-  state_id     Int
   Hotels       Hotels[]
 }
 
@@ -71,6 +63,7 @@ model Rooms {
   id_room     Int         @id @default(autoincrement())
   room_number Int 
   type        String
+  precio      Double
   description String?
   hotel       Hotels      @relation(fields: [id_hotel], references: [id_hotel])
   id_hotel    Int
